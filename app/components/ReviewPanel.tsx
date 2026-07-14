@@ -2,8 +2,15 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { useBundleContext, type SelectedItem } from "@/app/context/BundleContext";
+import { useBundleContext, type SelectedItem, type Product } from "@/app/context/BundleContext";
 import QuantityStepper from "./QuantityStepper";
+
+interface GroupedItem {
+  product: Product;
+  quantity: number;
+  linePrice: number;
+  lineCompareAtPrice: number | null;
+}
 
 export default function ReviewPanel() {
   const {
@@ -11,8 +18,6 @@ export default function ReviewPanel() {
     getSubtotal,
     getCompareAtTotal,
     getSavings,
-    incrementQuantity,
-    decrementQuantity,
     saveSystem,
     shipping,
   } = useBundleContext();
@@ -24,9 +29,30 @@ export default function ReviewPanel() {
   const compareAtTotal = getCompareAtTotal();
   const savings = getSavings();
 
-  // Group items by category
-  const grouped: Record<string, SelectedItem[]> = {};
+  // Group selected items by product id (merging variants into a single line item)
+  const groupedProductsMap = new Map<string, GroupedItem>();
   for (const item of items) {
+    const existing = groupedProductsMap.get(item.product.id);
+    if (existing) {
+      existing.quantity += item.quantity;
+      existing.linePrice += item.linePrice;
+      if (item.lineCompareAtPrice !== null) {
+        existing.lineCompareAtPrice = (existing.lineCompareAtPrice || 0) + item.lineCompareAtPrice;
+      }
+    } else {
+      groupedProductsMap.set(item.product.id, {
+        product: item.product,
+        quantity: item.quantity,
+        linePrice: item.linePrice,
+        lineCompareAtPrice: item.lineCompareAtPrice,
+      });
+    }
+  }
+  const groupedItems = Array.from(groupedProductsMap.values());
+
+  // Group items by category
+  const grouped: Record<string, GroupedItem[]> = {};
+  for (const item of groupedItems) {
     const cat = item.product.category;
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(item);
@@ -51,12 +77,12 @@ export default function ReviewPanel() {
   };
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl p-6 max-[600px]:p-4">
+    <div className="bg-[#EDF4FF] w- rounded-xl p-6 max-[600px]:p-4">
       {/* Header */}
       <div className="text-[11px] font-semibold tracking-widest text-muted uppercase mb-2">
         REVIEW
       </div>
-      <h2 className="text-xl font-extrabold mb-1.5">Your security system</h2>
+      <h2 className="font-gilroy font-semibold text-[22px] leading-none tracking-[0.6px] align-middle mb-1.5 text-gray-900">Your security system</h2>
       <p className="text-[13px] text-secondary leading-normal mb-5">
         Review your personalized protection system designed to keep what matters most safe.
       </p>
@@ -72,7 +98,7 @@ export default function ReviewPanel() {
                 {categoryLabels[cat]}
               </div>
               {catItems.map((item) => (
-                <ReviewLineItem key={`${item.product.id}-${item.variantId}`} item={item} />
+                <ReviewLineItem key={item.product.id} item={item} />
               ))}
             </div>
           );
@@ -93,7 +119,7 @@ export default function ReviewPanel() {
           <span className="text-[13px] font-medium">Fast Shipping</span>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-xs text-danger line-through">${shipping.compareAtPrice.toFixed(2)}</span>
+          <span className="text-xs text-[#D8392B] line-through">${shipping.compareAtPrice.toFixed(2)}</span>
           <span className="text-sm font-extrabold text-success">FREE</span>
         </div>
       </div>
@@ -162,10 +188,35 @@ export default function ReviewPanel() {
 /*  ReviewLineItem                                                     */
 /* ------------------------------------------------------------------ */
 
-function ReviewLineItem({ item }: { item: SelectedItem }) {
-  const { incrementQuantity, decrementQuantity } = useBundleContext();
+function ReviewLineItem({ item }: { item: GroupedItem }) {
+  const {
+    incrementQuantity,
+    decrementQuantity,
+    selectedVariant,
+    getQuantity,
+    selections
+  } = useBundleContext();
 
   const isPlan = item.product.isPlan;
+
+  const handleIncrement = () => {
+    const activeVariantId = selectedVariant[item.product.id] ?? (item.product.variants && item.product.variants.length > 0 ? item.product.variants[0].id : "_default");
+    incrementQuantity(item.product.id, activeVariantId);
+  };
+
+  const handleDecrement = () => {
+    const activeVariantId = selectedVariant[item.product.id] ?? (item.product.variants && item.product.variants.length > 0 ? item.product.variants[0].id : "_default");
+    if (getQuantity(item.product.id, activeVariantId) > 0) {
+      decrementQuantity(item.product.id, activeVariantId);
+    } else {
+      // Find another variant that currently has quantity > 0 and decrement it
+      const prodSelections = selections[item.product.id] || {};
+      const variantWithQty = Object.keys(prodSelections).find(vid => prodSelections[vid] > 0);
+      if (variantWithQty) {
+        decrementQuantity(item.product.id, variantWithQty);
+      }
+    }
+  };
 
   return (
     <div className="flex items-center justify-between gap-2 py-1.5">
@@ -201,7 +252,7 @@ function ReviewLineItem({ item }: { item: SelectedItem }) {
           {isPlan ? (
             <>Cam <span className="font-bold">Unlimited</span></>
           ) : (
-            item.product.name
+            <>{item.product.name}</>
           )}
         </span>
       </div>
@@ -211,14 +262,15 @@ function ReviewLineItem({ item }: { item: SelectedItem }) {
         {!isPlan && (
           <QuantityStepper
             quantity={item.quantity}
-            onIncrement={() => incrementQuantity(item.product.id, item.variantId)}
-            onDecrement={() => decrementQuantity(item.product.id, item.variantId)}
+            onIncrement={handleIncrement}
+            onDecrement={handleDecrement}
             compact
+            locked={item.product.id === "wyze-sense-hub"}
           />
         )}
         <div className="flex flex-col items-end min-w-[55px]">
           {item.lineCompareAtPrice != null && item.lineCompareAtPrice !== item.linePrice && (
-            <span className="text-[11px] text-danger line-through leading-tight">
+            <span className="text-[11px] text-[#D8392B] line-through leading-tight">
               ${item.lineCompareAtPrice.toFixed(2)}
             </span>
           )}

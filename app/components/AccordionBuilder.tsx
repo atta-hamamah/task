@@ -23,23 +23,23 @@ export default function AccordionBuilder() {
         return (
           <div
             key={step.id}
-            className="border border-gray-200 rounded-xl bg-white overflow-hidden [&+&]:border-t"
+            className={` ${activeStep === idx ? "bg-[#EDF4FF] rounded-[10px]" : " border-b"}  overflow-hidden `}
           >
             {/* STEP X OF 4 label */}
-            <div className="text-[11px] font-semibold tracking-wider text-muted uppercase px-6 pt-3">
+            <div className="text-[11px] border-b  pb-1 font-semibold tracking-wider text-muted uppercase px-6 pt-1">
               STEP {step.stepNumber} OF {steps.length}
             </div>
 
             {/* Header */}
             <button
               type="button"
-              className="flex items-center justify-between w-full px-6 pt-3 pb-4 text-left cursor-pointer transition-colors hover:bg-black/[0.015]"
+              className="flex items-center justify-between w-full px-6 pt-3 pb-4 text-left cursor-pointer transition-colors hover:bg-black/1.5"
               onClick={() => setActiveStep(isOpen ? -1 : idx)}
               aria-expanded={isOpen}
             >
               <div className="flex items-center gap-3">
                 <StepIcon icon={step.icon} />
-                <h2 className="text-[22px] font-bold leading-tight text-gray-900">
+                <h2 className="text-[22px] font-semibold leading-tight  text-[#1F1F1F]">
                   {step.title}
                 </h2>
               </div>

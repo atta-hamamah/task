@@ -4,7 +4,7 @@
       "id": "cameras",
       "stepNumber": 1,
       "title": "Choose your cameras",
-      "icon": "camera",
+      "icon": "/cam.svg",
       "nextLabel": "Choose your plan",
       "products": [
         {
@@ -18,9 +18,9 @@
           "price": 27.98,
           "category": "Cameras",
           "variants": [
-            { "id": "white", "label": "White", "color": "#FFFFFF" },
-            { "id": "grey", "label": "Grey", "color": "#888888" },
-            { "id": "black", "label": "Black", "color": "#1a1a1a" }
+            { "id": "white", "label": "White", "color": "#FFFFFF", "image": "/Wyze Cam white.png" },
+            { "id": "grey", "label": "Grey", "color": "#888888", "image": "/Wyze Cam gray.png" },
+            { "id": "black", "label": "Black", "color": "#1a1a1a", "image": "/Wyze Cam black.png" }
           ]
         },
         {
@@ -34,8 +34,8 @@
           "price": 34.98,
           "category": "Cameras",
           "variants": [
-            { "id": "white", "label": "White", "color": "#FFFFFF" },
-            { "id": "black", "label": "Black", "color": "#1a1a1a" }
+            { "id": "white", "label": "White", "color": "#FFFFFF", "image": "/Wyze Cam Pan v3 white.png" },
+            { "id": "black", "label": "Black", "color": "#1a1a1a", "image": "/Wyze Cam Pan v3 black.png" }
           ]
         },
         {
@@ -49,8 +49,8 @@
           "price": 69.98,
           "category": "Cameras",
           "variants": [
-            { "id": "white", "label": "White", "color": "#FFFFFF" },
-            { "id": "black", "label": "Black", "color": "#1a1a1a" }
+            { "id": "white", "label": "White", "color": "#FFFFFF", "image": "/Wyze Cam Floodlight white.png" },
+            { "id": "black", "label": "Black", "color": "#1a1a1a", "image": "/Wyze Cam Floodlight black.png" }
           ]
         },
         {
@@ -76,8 +76,8 @@
           "price": 89.98,
           "category": "Cameras",
           "variants": [
-            { "id": "white", "label": "White", "color": "#FFFFFF" },
-            { "id": "black", "label": "Black", "color": "#1a1a1a" }
+            { "id": "white", "label": "White", "color": "#FFFFFF", "image": "/Wyze Battery Cam Pro white.png" },
+            { "id": "black", "label": "Black", "color": "#1a1a1a", "image": "/Wyze Battery Cam Pro black.png" }
           ]
         }
       ]
@@ -86,7 +86,7 @@
       "id": "plan",
       "stepNumber": 2,
       "title": "Choose your plan",
-      "icon": "plan",
+      "icon": "/plan.svg",
       "nextLabel": "Choose your sensors",
       "products": [
         {
@@ -109,14 +109,14 @@
       "id": "sensors",
       "stepNumber": 3,
       "title": "Choose your sensors",
-      "icon": "sensor",
+      "icon": "/sensors.svg",
       "nextLabel": "Add extra protection",
       "products": [
         {
           "id": "wyze-sense-motion-sensor",
           "name": "Wyze Sense Motion Sensor",
           "description": "Detect motion in any room with smart alerts.",
-          "image": null,
+          "image": "/Wyze Sense Motion Sensor.png",
           "learnMoreUrl": "#",
           "badge": null,
           "compareAtPrice": null,
@@ -128,7 +128,7 @@
           "id": "wyze-sense-hub",
           "name": "Wyze Sense Hub (Required)",
           "description": "Central hub for all Wyze sensors.",
-          "image": null,
+          "image": "/Wyze Sense Hub.png",
           "learnMoreUrl": "#",
           "badge": null,
           "compareAtPrice": 29.92,
@@ -143,7 +143,7 @@
       "id": "extras",
       "stepNumber": 4,
       "title": "Add extra protection",
-      "icon": "extras",
+      "icon": "/extra.svg",
       "nextLabel": null,
       "products": [
         {

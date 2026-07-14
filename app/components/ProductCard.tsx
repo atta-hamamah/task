@@ -19,8 +19,8 @@ export default function ProductCard({ product }: ProductCardProps) {
     selections,
   } = useBundleContext();
 
-  const hasVariants = product.variants.length > 0;
-  const activeVariantId = selectedVariant[product.id] ?? (hasVariants ? product.variants[0].id : "_default");
+  const hasVariants = product.variants ? product.variants.length > 0 : false;
+  const activeVariantId = selectedVariant[product.id] ?? (hasVariants ? product.variants![0].id : "_default");
   const qty = getQuantity(product.id, activeVariantId);
 
   // Card is "selected" if ANY variant of this product has qty > 0
@@ -30,8 +30,12 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className={` relative border-2 rounded-xl p-4 bg-white transition-all duration-200 flex
-        ${isSelected ? "border-primary shadow-[0_0_0_1px_var(--color-primary)]" : "border-gray-200"}`}
+      className={`relative bg-white transition-all duration-200 flex  rounded-[10px] gap-4.75
+        w-(--card-width) h-(--card-height) p-(--card-padding) min-w-83 max-[600px]:min-w-0
+        [--card-height:159px] [--card-padding:11px] flex-row
+        max-[600px]:[--card-height:331.1px]
+        max-[600px]:flex-col max-[600px]:mx-auto
+        ${isSelected ? "border-primary/70 border-2" : " "}`}
     >
       {/* Badge */}
       {product.badge && (
@@ -42,47 +46,63 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product image */}
       {product.image && (
-        <div className="flex items-center justify-center h-[140px] mb-3">
+        <div className="flex items-center justify-center shrink-0 w-20 h-full max-[600px]:w-full max-[600px]:h-27.5">
           <Image
             src={product.image}
             alt={product.name}
-            width={140}
-            height={140}
-            style={{ objectFit: "contain" }}
+            width={120}
+            height={120}
+            className="object-contain max-h-full max-w-full"
           />
         </div>
       )}
-      <div className="">
-        {/* Title */}
-        <h3 className="text-[15px] font-bold leading-tight mb-1">{product.name}</h3>
 
-        {/* Description */}
-        <p className="text-[13px] text-secondary leading-snug mb-1">{product.description}</p>
+      {/* Content area */}
+      <div className="flex flex-col justify-between flex-1 min-w-0 h-full">
+        <div className="min-w-0">
+          {/* Title */}
+          <h3 className="text-[15px] font-bold leading-tight mb-1 text-gray-900 truncate">
+            {product.name}
+          </h3>
 
-        {/* Learn More */}
-        <a href={product.learnMoreUrl} className="text-[13px] font-medium text-primary mb-3 inline-block">
-          Learn More
-        </a>
+          {/* Description & Learn More inline */}
+          <p className="text-[13px] text-secondary leading-snug mb-1 line-clamp-2 max-[600px]:line-clamp-3">
+            {product.description}{" "}
+            <a href={product.learnMoreUrl} className="text-[13px] font-medium text-primary hover:underline inline-block">
+              Learn More
+            </a>
+          </p>
+        </div>
 
         {/* Variant chips */}
         {hasVariants && (
-          <div className="flex gap-1.5 mb-3 flex-wrap">
-            {product.variants.map((v) => {
+          <div className="flex gap-1.5 mb-1.5 flex-wrap">
+            {product.variants!.map((v) => {
               const isActive = v.id === activeVariantId;
               return (
                 <button
                   key={v.id}
                   type="button"
-                  className={`inline-flex items-center gap-[5px] px-2.5 pl-1.5 py-1 border-[1.5px] rounded-full text-xs font-medium bg-white cursor-pointer transition-colors
-                  ${isActive ? "border-primary bg-primary-light" : "border-gray-200"}`}
+                  className={`inline-flex items-center gap-0.75 w-16.25 h-6.5 rounded-xs border-[0.5px] pt-px pr-0.75 pb-px pl-0.75 font-medium cursor-pointer transition-colors text-[10px] leading-none shrink-0
+                  ${isActive ? "border-[#0AA288] bg-[#1DF0BB0A]" : "border-[#CCCCCC]"}`}
                   onClick={() => setSelectedVariant(product.id, v.id)}
                   aria-label={`Select ${v.label}`}
                 >
-                  <span
-                    className="w-3.5 h-3.5 rounded-full border border-gray-300 shrink-0"
-                    style={{ backgroundColor: v.color }}
-                  />
-                  <span className="leading-none">{v.label}</span>
+                  {v.image ? (
+                    <Image
+                      src={v.image}
+                      alt={v.label}
+                      width={20}
+                      height={20}
+                      className="object-contain shrink-0"
+                    />
+                  ) : (
+                    <span
+                      className="w-3 h-3 rounded-full border border-gray-300 shrink-0 ml-0.5"
+                      style={{ backgroundColor: v.color }}
+                    />
+                  )}
+                  <span className="leading-none truncate">{v.label}</span>
                 </button>
               );
             })}
@@ -90,17 +110,20 @@ export default function ProductCard({ product }: ProductCardProps) {
         )}
 
         {/* Quantity + price row */}
-        <div className="flex items-center justify-between mt-auto pt-2">
+        <div className="flex items-center justify-between pt-1">
           <QuantityStepper
             quantity={qty}
             onIncrement={() => incrementQuantity(product.id, activeVariantId)}
             onDecrement={() => decrementQuantity(product.id, activeVariantId)}
+            locked={product.id === "wyze-sense-hub"}
           />
-          <div className="flex flex-col items-end">
+          <div className="flex flex-col items-end shrink-0">
             {product.compareAtPrice != null && (
-              <span className="text-[13px] text-danger line-through">${product.compareAtPrice.toFixed(2)}</span>
+              <span className="font-gilroy font-normal text-[16px] text-[#D8392B] line-through leading-none tracking-[0.6px] text-right align-middle mb-1">
+                ${product.compareAtPrice.toFixed(2)}
+              </span>
             )}
-            <span className="text-[15px] font-bold text-gray-900">
+            <span className="font-gilroy font-normal text-[16px] leading-none tracking-[0.6px] text-right align-middle text-gray-900">
               {product.priceLabel ? product.priceLabel : `$${product.price.toFixed(2)}`}
             </span>
           </div>

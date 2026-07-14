@@ -11,6 +11,7 @@ export interface Variant {
   id: string;
   label: string;
   color: string;
+  image?: string;
 }
 
 export interface Product {
@@ -25,7 +26,7 @@ export interface Product {
   priceUnit?: string;
   priceLabel?: string;
   category: string;
-  variants: Variant[];
+  variants?: Variant[];
   isPlan?: boolean;
 }
 
@@ -84,7 +85,7 @@ export function useBundleContext() {
 }
 
 function getDefaultVariant(product: Product): string {
-  return product.variants.length > 0 ? product.variants[0].id : "_default";
+  return product.variants && product.variants.length > 0 ? product.variants[0].id : "_default";
 }
 
 export function BundleProvider({ children }: { children: React.ReactNode }) {
@@ -94,7 +95,7 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
   /* ---------- State ---------- */
   const [activeStep, setActiveStep] = useState(0);
   const [selections, setSelections] = useState<Selections>(() => {
-    return { ...productsData.initialSelections } as Selections;
+    return { "wyze-sense-hub": { "_default": 1 } } as Selections;
   });
 
   // Track which variant chip is active per product
@@ -102,15 +103,6 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
     const sv: Record<string, string> = {};
     for (const step of steps) {
       for (const p of step.products) {
-        // If the product has initial selections, pick the first variant with qty > 0
-        const initial = productsData.initialSelections[p.id as keyof typeof productsData.initialSelections];
-        if (initial) {
-          const variantWithQty = Object.entries(initial).find(([, qty]) => qty > 0);
-          if (variantWithQty) {
-            sv[p.id] = variantWithQty[0];
-            continue;
-          }
-        }
         sv[p.id] = getDefaultVariant(p);
       }
     }
@@ -123,7 +115,7 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed.selections) setSelections(parsed.selections);
+        if (parsed.selections) setSelections({ ...parsed.selections, "wyze-sense-hub": { "_default": 1 } });
         if (parsed.selectedVariant) setSelectedVariantState(parsed.selectedVariant);
         if (typeof parsed.activeStep === "number") setActiveStep(parsed.activeStep);
       } catch {
@@ -208,7 +200,7 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
       if (!product) continue;
       for (const [variantId, qty] of Object.entries(variants)) {
         if (qty <= 0) continue;
-        const variant = product.variants.find((v) => v.id === variantId);
+        const variant = product.variants?.find((v) => v.id === variantId);
         items.push({
           product,
           variantId,
