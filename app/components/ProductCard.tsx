@@ -31,10 +31,10 @@ export default function ProductCard({ product }: ProductCardProps) {
   return (
     <div
       className={`relative bg-white transition-all duration-200 flex  rounded-[10px] gap-4.75
-        w-(--card-width) h-(--card-height) p-(--card-padding) min-w-83 max-[600px]:min-w-0
+          p-(--card-padding) max-[1500px]:-h-82.5 h-(--card-height)
         [--card-height:159px] [--card-padding:11px] flex-row
         max-[600px]:[--card-height:331.1px]
-        max-[600px]:flex-col max-[600px]:mx-auto
+        max-[1500px]:flex-col max-[600px]:mx-auto
         ${isSelected ? "border-primary/70 border-2" : " "}`}
     >
       {/* Badge */}

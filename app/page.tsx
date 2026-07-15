@@ -14,11 +14,11 @@ export default function Home() {
         </div>
 
         {/* Two-column layout: builder + review */}
-        <div className="grid grid-cols-[1fr_360px] gap-6 items-start max-[1024px]:grid-cols-1">
+        <div className="grid grid-cols-[1fr_399px] gap-6 items-start max-[1500px]:grid-cols-1">
           <div>
             <AccordionBuilder />
           </div>
-          <div className="sticky top-6 max-[1024px]:static">
+          <div className="sticky top-6 max-[1500px]:static">
             <ReviewPanel />
           </div>
         </div>

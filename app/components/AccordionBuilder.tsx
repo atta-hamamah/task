@@ -68,7 +68,7 @@ export default function AccordionBuilder() {
             {/* Body */}
             {isOpen && (
               <div className="px-6 pb-6">
-                <div className="grid grid-cols-2 gap-4 max-[600px]:grid-cols-1 max-[600px]:gap-3">
+                <div className="grid grid-cols-2 max-[1500px]:grid-cols-5 gap-4 max-[600px]:grid-cols-1 max-[600px]:gap-3">
                   {step.products.map((product) => (
                     <ProductCard key={product.id} product={product} />
                   ))}
