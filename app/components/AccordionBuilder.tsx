@@ -39,12 +39,12 @@ export default function AccordionBuilder() {
             >
               <div className="flex items-center gap-3">
                 <StepIcon icon={step.icon} />
-                <h2 className="text-[22px] font-semibold leading-tight  text-[#1F1F1F]">
+                <h2 className="text-[18px] min-[600px]:text-[24px] min-[1500px]:text-[28px] font-semibold leading-tight  text-[#1F1F1F]">
                   {step.title}
                 </h2>
               </div>
               <div className="flex items-center gap-2">
-                {selectedCount > 0 && (
+                {selectedCount > 0 && step.id !== "plan" && (
                   <span className="text-sm font-medium text-primary">
                     {selectedCount} selected
                   </span>
@@ -68,10 +68,23 @@ export default function AccordionBuilder() {
             {/* Body */}
             {isOpen && (
               <div className="px-6 pb-6">
-                <div className="grid grid-cols-2 max-[1500px]:grid-cols-5 gap-4 max-[600px]:grid-cols-1 max-[600px]:gap-3">
-                  {step.products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+                <div className="grid  min-[600px]:grid-cols-2 min-[890px]:grid-cols-4  min-[1110px]:grid-cols-5 min-[1500px]:grid-cols-2  gap-3 min-[600px]:gap-4 ">
+                  {step.products.map((product, index) => {
+                    const isLast = index === step.products.length - 1;
+                    const isOdd = step.products.length % 2 !== 0;
+                    return (
+                      <div
+                        key={product.id}
+                        className={`w-full ${
+                          isLast && isOdd
+                            ? "min-[1500px]:col-span-full min-[1500px]:max-w-[calc((100%-16px)/2)] min-[1500px]:mx-auto"
+                            : ""
+                        }`}
+                      >
+                        <ProductCard product={product} />
+                      </div>
+                    );
+                  })}
                 </div>
 
                 {step.nextLabel && (

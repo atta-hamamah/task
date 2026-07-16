@@ -19,7 +19,7 @@ export default function QuantityStepper({
 }: QuantityStepperProps) {
   const isZero = quantity <= 0;
   const btnSize = "w-5 h-5";
-  const valueSz = compact ? "text-xs min-w-4" : "text-[13px] min-w-5";
+  const valueSz = compact ? "text-xs min-w-4" : "text-[14px] min-w-5";
 
   let decClass = `${btnSize} box-border rounded-sm flex items-center justify-center text-gray-800 transition-colors `;
   let incClass = `${btnSize} box-border rounded-sm flex items-center justify-center text-gray-800 transition-colors `;

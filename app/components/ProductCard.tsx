@@ -16,6 +16,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     getQuantity,
     incrementQuantity,
     decrementQuantity,
+    setQuantity,
     selections,
   } = useBundleContext();
 
@@ -30,11 +31,22 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   return (
     <div
-      className={`relative bg-white transition-all duration-200 flex  rounded-[10px] gap-4.75
-          p-(--card-padding) max-[1500px]:-h-82.5 h-(--card-height)
-        [--card-height:159px] [--card-padding:11px] flex-row
-        max-[600px]:[--card-height:331.1px]
-        max-[1500px]:flex-col max-[600px]:mx-auto
+      onClick={
+        product.isPlan
+          ? () => {
+              if (qty > 0) {
+                setQuantity(product.id, activeVariantId, 0);
+              } else {
+                setQuantity(product.id, activeVariantId, 1);
+              }
+            }
+          : undefined
+      }
+      className={`relative bg-white transition-all duration-200 flex items-center justify-center rounded-[10px] gap-4.75
+          p-(--card-padding) [--card-padding:11px] flex-row max-[1500px]:h-82.5 
+        max-[600px]:[--card-height:331.1px] [--card-height:159px]
+        max-[1500px]:flex-col w-full
+        ${product.isPlan ? "cursor-pointer select-none" : ""}
         ${isSelected ? "border-primary/70 border-2" : " "}`}
     >
       {/* Badge */}
@@ -46,7 +58,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
       {/* Product image */}
       {product.image && (
-        <div className="flex items-center justify-center shrink-0 w-20 h-full max-[600px]:w-full max-[600px]:h-27.5">
+        <div className="flex items-center justify-center shrink-0 w-20 h-29.5 max-[600px]:w-full  max-[600px]:h-27.5">
           <Image
             src={product.image}
             alt={product.name}
@@ -58,7 +70,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       )}
 
       {/* Content area */}
-      <div className="flex flex-col justify-between flex-1 min-w-0 h-full">
+      <div className="flex flex-col justify-between flex-1 min-w-0 h-full w-full">
         <div className="min-w-0">
           {/* Title */}
           <h3 className="text-[15px] font-bold leading-tight mb-1 text-gray-900 truncate">
@@ -111,12 +123,33 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Quantity + price row */}
         <div className="flex items-center justify-between pt-1">
-          <QuantityStepper
-            quantity={qty}
-            onIncrement={() => incrementQuantity(product.id, activeVariantId)}
-            onDecrement={() => decrementQuantity(product.id, activeVariantId)}
-            locked={product.id === "wyze-sense-hub"}
-          />
+          {product.isPlan ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (qty > 0) {
+                  setQuantity(product.id, activeVariantId, 0);
+                } else {
+                  setQuantity(product.id, activeVariantId, 1);
+                }
+              }}
+              className={`h-9 px-4 rounded-full text-[13px] font-semibold flex items-center justify-center transition-colors cursor-pointer ${
+                qty > 0
+                  ? "bg-primary text-white hover:bg-primary/95"
+                  : "border border-primary text-primary bg-transparent hover:bg-primary hover:text-white"
+              }`}
+            >
+              {qty > 0 ? "Selected" : "Select"}
+            </button>
+          ) : (
+            <QuantityStepper
+              quantity={qty}
+              onIncrement={() => incrementQuantity(product.id, activeVariantId)}
+              onDecrement={() => decrementQuantity(product.id, activeVariantId)}
+              locked={product.id === "wyze-sense-hub"}
+            />
+          )}
           <div className="flex flex-col items-end shrink-0">
             {product.compareAtPrice != null && (
               <span className="font-gilroy font-normal text-[16px] text-[#D8392B] line-through leading-none tracking-[0.6px] text-right align-middle mb-1">
