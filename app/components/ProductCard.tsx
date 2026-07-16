@@ -34,20 +34,20 @@ export default function ProductCard({ product }: ProductCardProps) {
       onClick={
         product.isPlan
           ? () => {
-              if (qty > 0) {
-                setQuantity(product.id, activeVariantId, 0);
-              } else {
-                setQuantity(product.id, activeVariantId, 1);
-              }
+            if (qty > 0) {
+              setQuantity(product.id, activeVariantId, 0);
+            } else {
+              setQuantity(product.id, activeVariantId, 1);
             }
+          }
           : undefined
       }
       className={`relative bg-white transition-all duration-200 flex items-center justify-center rounded-[10px] gap-4.75
           p-(--card-padding) [--card-padding:11px] flex-row max-[1500px]:h-82.5 
-        max-[600px]:[--card-height:331.1px] [--card-height:159px]
+        max-[600px]:[--card-height:331.1px] [--card-height:159px] border-2
         max-[1500px]:flex-col w-full
         ${product.isPlan ? "cursor-pointer select-none" : ""}
-        ${isSelected ? "border-primary/70 border-2" : " "}`}
+        ${isSelected ? "border-primary " : " border-transparent"}`}
     >
       {/* Badge */}
       {product.badge && (
@@ -134,11 +134,10 @@ export default function ProductCard({ product }: ProductCardProps) {
                   setQuantity(product.id, activeVariantId, 1);
                 }
               }}
-              className={`h-9 px-4 rounded-full text-[13px] font-semibold flex items-center justify-center transition-colors cursor-pointer ${
-                qty > 0
-                  ? "bg-primary text-white hover:bg-primary/95"
-                  : "border border-primary text-primary bg-transparent hover:bg-primary hover:text-white"
-              }`}
+              className={`h-9 px-4 rounded-full text-[13px] font-semibold flex items-center justify-center transition-colors cursor-pointer ${qty > 0
+                ? "bg-primary text-white hover:bg-primary/95"
+                : "border border-primary text-primary bg-transparent hover:bg-primary hover:text-white"
+                }`}
             >
               {qty > 0 ? "Selected" : "Select"}
             </button>

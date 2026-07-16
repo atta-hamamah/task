@@ -91,7 +91,7 @@ export default function AccordionBuilder() {
                   <div className="flex justify-center mt-5">
                     <button
                       type="button"
-                      className="px-8 py-3 text-[15px] font-semibold border-2 border-primary rounded-full text-primary bg-transparent transition-colors hover:bg-primary hover:text-white"
+                      className="flex items-center justify-center w-[242px] max-w-full h-[39px] pt-[5px] pr-[24px] pb-[5px] pl-[24px] gap-[10px] opacity-100 border-[1px] border-primary rounded-[7px] text-primary bg-transparent text-[15px] font-semibold transition-colors hover:bg-primary hover:text-white cursor-pointer"
                       onClick={handleNext}
                     >
                       Next: {step.nextLabel}

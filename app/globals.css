@@ -2,14 +2,31 @@
 @import "tailwindcss";
 
 @theme {
-    --color-primary: #4E2FD2B2;
+    --color-primary: #4E2FD2;
     --font-sans: Gilroy, sans-serif;
     --font-gilroy: Gilroy, var(--font-sans);
 }
 
 
-body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, span, p, div {
+body,
+button,
+input,
+select,
+textarea,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+span,
+p,
+div {
     font-family: Gilroy, var(--font-sans);
+}
+
+:root {
+    --color-primary: #4E2FD2;
 }
 
 a {

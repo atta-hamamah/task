@@ -77,7 +77,7 @@ export default function ReviewPanel() {
   };
 
   return (
-    <div className="bg-[#EDF4FF] grid min-[980px]:grid-cols-2 min-[980px]:gap-12.75 min-[1500px]:grid-cols-1 min-[1500px]:gap-0 rounded-xl p-6 max-[600px]:p-4">
+    <div className="bg-[#EDF4FF] grid min-[980px]:grid-cols-2  min-[1500px]:grid-cols-1 rounded-xl p-6 max-[600px]:p-4 w-">
       {/* Summery */}
       <div>
         {/* Header */}
@@ -96,7 +96,7 @@ export default function ReviewPanel() {
             if (!catItems || catItems.length === 0) return null;
             return (
               <div key={cat}>
-                <div className="text-[10px] font-bold tracking-widest text-muted uppercase mb-1.5">
+                <div className="text-[10px] text-[#A8B2BD] font-bold tracking-widest uppercase border-b border-gray-200 pb-1 mb-2">
                   {categoryLabels[cat]}
                 </div>
                 {catItems.map((item) => (
@@ -108,82 +108,90 @@ export default function ReviewPanel() {
         </div>
 
         {/* Shipping */}
-        <div className="flex items-center justify-between gap-2 border-t border-gray-200 pt-3 mt-3">
-          <div className="flex items-center gap-2.5">
-            <span className="flex items-center justify-center shrink-0">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5C3CFC" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="1" y="3" width="15" height="13" rx="1" />
-                <polygon points="16,8 20,8 23,11 23,16 16,16" />
-                <circle cx="5.5" cy="18.5" r="2.5" />
-                <circle cx="18.5" cy="18.5" r="2.5" />
-              </svg>
+        <div className="flex items-center justify-between gap-2 border-t border-gray-200 pt-4 mt-4">
+          <div className="flex items-center gap-2">
+            <Image
+              src="/shipping.svg"
+              alt="Fast Shipping"
+              width={41}
+              height={41}
+              className="shrink-0 object-contain"
+            />
+            <span className="text-[12px] min-[600px]:text-[18px] min-[1500px]:text-[14px] font-bold leading-tight text-gray-900">
+              Fast Shipping
             </span>
-            <span className="text-[13px] font-medium">Fast Shipping</span>
           </div>
           <div className="flex flex-col items-end">
-            <span className="text-xs text-[#D8392B] line-through">${shipping.compareAtPrice.toFixed(2)}</span>
-            <span className="text-sm font-extrabold text-success">FREE</span>
+            <span className="text-[14px] text-[#8C8C8C] line-through leading-tight">
+              ${shipping.compareAtPrice.toFixed(2)}
+            </span>
+            <span className="text-[12px] min-[600px]:text-[14px] font-bold leading-tight text-primary">
+              FREE
+            </span>
           </div>
         </div>
       </div>
-      {/* Satisfaction section */}
-      <div>
-        {/* Satisfaction badge */}
-        <div className="flex items-center gap-3.5 py-4 border-t border-gray-200 mt-3">
-          <Image
-            src="/Satisfaction Badge-05 1.png"
-            alt="100% Wyze satisfaction guarantee"
-            width={80}
-            height={80}
-            className="shrink-0"
-          />
-          <div>
-            <div className="text-sm font-bold mb-1">30-day hassle-free returns</div>
-            <p className="text-xs text-secondary leading-snug">
-              If you&apos;re not totally in love with the product, we will refund you 100%.
-            </p>
+      {/* Satisfaction & Totals section */}
+      <div className="pt-4 border-t flex  min-[1500px]:flex-col border-gray-200 mt-3 min-[980px]:pl-12.75 min-[1500px]:pl-0">
+        <div className="flex items-center justify-between mb-4">
+          {/* Satisfaction badge */}
+          <div className="shrink-0">
+            <Image
+              src="/Satisfaction Badge-05 1.png"
+              alt="100% Wyze satisfaction guarantee"
+              width={78}
+              height={78}
+              className="shrink-0"
+            />
           </div>
-        </div>
 
-        {/* Financing line */}
-        <div className="flex justify-end py-2">
-          <span className="bg-primary text-white text-[11px] font-bold px-3 py-[5px] rounded-md">
-            as low as $17.19/mo
-          </span>
-        </div>
+          {/* Pricing & Financing */}
+          <div className="flex flex-col items-end gap-1  min-[1500px]:flex-row">
+            {/* Financing line */}
+            <span className="bg-primary text-white font-gilroy font-normal text-[12px] leading-none  flex items-center justify-center px-2 py-1 rounded-[3px]">
+              as low as $17.19/mo
+            </span>
 
-        {/* Total */}
-        <div className="flex justify-end items-baseline gap-2.5 pt-1 pb-1">
-          <span className="text-base text-muted line-through">${compareAtTotal.toFixed(2)}</span>
-          <span className="text-[28px] font-extrabold text-gray-900 max-[600px]:text-2xl">
-            ${subtotal.toFixed(2)}
-          </span>
+            {/* Total */}
+            <div className="flex justify-end items-baseline gap-2.5 pt-1 pb-1">
+              <span className="text-[22px] font-gilroy font-medium text-[#8C8C8C] line-through">${compareAtTotal.toFixed(2)}</span>
+              <span className="text-[24px] font-gilroy font-bold text-primary leading-8 tracking-[-0.0013em] text-right align-middle">
+                ${subtotal.toFixed(2)}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* Savings callout */}
-        {savings > 0 && (
-          <div className="text-center text-[13px] font-semibold text-success-dark my-2">
-            Congrats! You&apos;re saving ${savings.toFixed(2)} on your security bundle!
-          </div>
-        )}
+        <div>
 
-        {/* Checkout button */}
-        <button
-          type="button"
-          className="block w-full py-3.5 mt-2 text-base font-bold text-white bg-gray-900 rounded-lg transition-colors hover:bg-gray-700"
-          onClick={handleCheckout}
-        >
-          Checkout
-        </button>
+        </div>
+        <div className="flex flex-col items-center">
+          {savings > 0 && (
+            <div className="text-center mx-auto text-[14px] font-gilroy font-semibold text-[#0AA288] tracking-[-0.06px]">
+              Congrats! You&apos;re saving ${savings.toFixed(2)} on your security bundle!
+            </div>
+          )}
 
-        {/* Save link */}
-        <button
-          type="button"
-          className="block w-full py-3 text-sm font-medium text-primary underline text-center cursor-pointer transition-colors hover:text-primary-hover"
-          onClick={handleSave}
-        >
-          {saved ? "✓ System saved!" : "Save my system for later"}
-        </button>
+          {/* Checkout button */}
+          <button
+            type="button"
+            className="flex items-center justify-center w-full --w-121.5 h-13.5 rounded-md bg-primary text-white text-xl font-gilroy font-bold transition-colors hover:bg-[#3D22B1] cursor-pointer"
+            onClick={handleCheckout}
+          >
+            Checkout
+          </button>
+
+          {/* Save link */}
+          <button
+            type="button"
+            className="block w-full mt-2 text-[16px] font-gilroy font-light italic text-[#484848] underline text-center cursor-pointer transition-colors hover:text-primary-hover"
+            onClick={handleSave}
+          >
+            {saved ? "✓ System saved!" : "Save my system for later"}
+          </button>
+        </div>
+
       </div>
     </div>
   );
@@ -236,14 +244,14 @@ function ReviewLineItem({ item }: { item: GroupedItem }) {
             className="rounded shrink-0 object-contain"
           />
         )}
-        {isPlan && (
-          <span className="flex items-center justify-center shrink-0">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5C3CFC" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="17 8 12 3 7 8" />
-              <line x1="12" y1="3" x2="12" y2="15" />
-            </svg>
-          </span>
+        {isPlan && !item.product.image && (
+          <Image
+            src="/plan copy.svg"
+            alt="Wyze Shield Logo"
+            width={20}
+            height={24}
+            className="shrink-0 object-contain"
+          />
         )}
         {!item.product.image && !isPlan && (
           <span className="flex items-center justify-center shrink-0">
@@ -253,9 +261,12 @@ function ReviewLineItem({ item }: { item: GroupedItem }) {
             </svg>
           </span>
         )}
-        <span className=" text-[12px]  min-[600px]:text-[18px]  min-[1500px]:text-[14px] font-medium leading-tight ">
+        <span className="text-[12px] min-[600px]:text-[18px] min-[1500px]:text-[14px] font-medium leading-tight">
           {isPlan ? (
-            <>Cam <span className="font-bold">Unlimited</span></>
+            <>
+              <span className="font-bold text-gray-900">Cam </span>
+              <span className="font-bold text-primary">Unlimited</span>
+            </>
           ) : (
             <>{item.product.name}</>
           )}
@@ -275,11 +286,11 @@ function ReviewLineItem({ item }: { item: GroupedItem }) {
         )}
         <div className="flex flex-col items-end min-w-13.75">
           {item.lineCompareAtPrice != null && item.lineCompareAtPrice !== item.linePrice && (
-            <span className="text-[14px] text-[#D8392B] line-through leading-tight">
-              ${item.lineCompareAtPrice.toFixed(2)}
+            <span className="text-[12px] min-[600px]:text-[14px] line-through leading-tight text-[#8C8C8C]">
+              ${item.lineCompareAtPrice.toFixed(2)}{isPlan ? "/mo" : ""}
             </span>
           )}
-          <span className={`text-[12px] min-[600px]:text-[14px] font-bold leading-tight ${item.product.priceLabel === "FREE" ? "text-success" : "text-gray-900"}`}>
+          <span className="text-[12px] min-[600px]:text-[14px] font-bold leading-tight text-primary">
             {item.product.priceLabel
               ? item.product.priceLabel
               : item.product.priceUnit
