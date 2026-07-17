@@ -1,7 +1,6 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useMemo, useEffect } from "react";
-import productsData from "@/data/products.json";
 
 /* ------------------------------------------------------------------ */
 /*  Types                                                              */
@@ -39,6 +38,13 @@ export interface Step {
   products: Product[];
 }
 
+interface ShippingInfo {
+  label: string;
+  compareAtPrice: number;
+  price: number;
+  priceLabel: string;
+}
+
 // { productId: { variantId: quantity } }
 export type Selections = Record<string, Record<string, number>>;
 
@@ -60,7 +66,7 @@ interface BundleContextValue {
   getSavings: () => number;
   saveSystem: () => void;
   loadSystem: () => boolean;
-  shipping: typeof productsData.shipping;
+  shipping: ShippingInfo;
 }
 
 export interface SelectedItem {
@@ -89,8 +95,10 @@ function getDefaultVariant(product: Product): string {
 }
 
 export function BundleProvider({ children }: { children: React.ReactNode }) {
-  const steps = productsData.steps as Step[];
-  const shipping = productsData.shipping;
+  /* ---------- Data fetched from API ---------- */
+  const [steps, setSteps] = useState<Step[]>([]);
+  const [shipping, setShipping] = useState<ShippingInfo>({ label: "", compareAtPrice: 0, price: 0, priceLabel: "" });
+  const [isLoading, setIsLoading] = useState(true);
 
   /* ---------- State ---------- */
   const [activeStep, setActiveStep] = useState(0);
@@ -99,29 +107,45 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
   });
 
   // Track which variant chip is active per product
-  const [selectedVariant, setSelectedVariantState] = useState<Record<string, string>>(() => {
-    const sv: Record<string, string> = {};
-    for (const step of steps) {
-      for (const p of step.products) {
-        sv[p.id] = getDefaultVariant(p);
-      }
-    }
-    return sv;
-  });
+  const [selectedVariant, setSelectedVariantState] = useState<Record<string, string>>({});
 
-  /* ---------- Hydrate from localStorage on mount ---------- */
+  /* ---------- Fetch product data from API on mount ---------- */
   useEffect(() => {
-    const saved = localStorage.getItem("wyze-bundle-saved");
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed.selections) setSelections({ ...parsed.selections, "wyze-sense-hub": { "_default": 1 } });
-        if (parsed.selectedVariant) setSelectedVariantState(parsed.selectedVariant);
-        if (typeof parsed.activeStep === "number") setActiveStep(parsed.activeStep);
-      } catch {
-        // ignore bad data
-      }
-    }
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => {
+        const fetchedSteps = data.steps as Step[];
+        setSteps(fetchedSteps);
+        setShipping(data.shipping);
+
+        // Initialize selected variants from fetched data
+        const sv: Record<string, string> = {};
+        for (const step of fetchedSteps) {
+          for (const p of step.products) {
+            sv[p.id] = getDefaultVariant(p);
+          }
+        }
+        setSelectedVariantState(sv);
+
+        // Hydrate from localStorage if saved data exists
+        const saved = localStorage.getItem("wyze-bundle-saved");
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed.selections) setSelections({ ...parsed.selections, "wyze-sense-hub": { "_default": 1 } });
+            if (parsed.selectedVariant) setSelectedVariantState(parsed.selectedVariant);
+            if (typeof parsed.activeStep === "number") setActiveStep(parsed.activeStep);
+          } catch {
+            // ignore bad data
+          }
+        }
+
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch products:", err);
+        setIsLoading(false);
+      });
   }, []);
 
   /* ---------- Helpers ---------- */
@@ -300,5 +324,21 @@ export function BundleProvider({ children }: { children: React.ReactNode }) {
     ]
   );
 
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "60vh" }}>
+        <div style={{
+          width: 40, height: 40,
+          border: "4px solid #e5e7eb",
+          borderTopColor: "#3b82f6",
+          borderRadius: "50%",
+          animation: "spin 0.8s linear infinite",
+        }} />
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    );
+  }
+
   return <BundleContext.Provider value={value}>{children}</BundleContext.Provider>;
 }
+

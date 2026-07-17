@@ -29,6 +29,10 @@ div {
     --color-primary: #4E2FD2;
 }
 
+html {
+    scrollbar-gutter: stable;
+}
+
 a {
     color: var(--color-primary);
     text-decoration: none;
