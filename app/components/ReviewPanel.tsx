@@ -177,7 +177,7 @@ export default function ReviewPanel() {
 
         <div className="flex flex-col items-center">
           {savings > 0 && (
-            <div className="text-center mx-auto text-[14px] font-gilroy font-semibold text-[#0AA288] tracking-[-0.06px]">
+            <div className="text-center mx-auto text-[13px] font-gilroy font-semibold text-[#0AA288] [word-spacing:-0.01em]">
               Congrats! You&apos;re saving ${savings.toFixed(2)} on your security bundle!
             </div>
           )}
