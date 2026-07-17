@@ -14,7 +14,7 @@ export default function Home() {
         </div>
 
         {/* Two-column layout: builder + review */}
-        <div className="grid grid-cols-[1fr_399px] gap-6 items-start max-[1500px]:grid-cols-1">
+        <div className="grid grid-cols-[1fr_399px] gap-6 items-start max-[1500px]:grid-cols-1 min-[2400px]:grid-cols-2">
           <div>
             <AccordionBuilder />
           </div>

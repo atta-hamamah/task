@@ -132,23 +132,34 @@ export default function ReviewPanel() {
         </div>
       </div>
       {/* Satisfaction & Totals section */}
-      <div className="pt-4 border-t flex  min-[1500px]:flex-col border-gray-200 mt-3 min-[980px]:pl-12.75 min-[1500px]:pl-0">
-        <div className="flex items-center justify-between mb-4">
+      <div className="pt-4 border-t flex flex-col border-gray-200 mt-3 min-[980px]:pl-12.75 min-[1500px]:pl-0">
+        <div className="flex flex-col min-[1500px]:flex-row items-center justify-between mb-4">
           {/* Satisfaction badge */}
-          <div className="shrink-0">
-            <Image
-              src="/Satisfaction Badge-05 1.png"
-              alt="100% Wyze satisfaction guarantee"
-              width={78}
-              height={78}
-              className="shrink-0"
-            />
+          <div className="flex items-center gap-6">
+            <div className="shrink-0 w-32.75 h-32.75 min-[1500px]:w-19.75 min-[1500px]:h-19.75 ">
+              <Image
+                src="/Satisfaction Badge-05 1.png"
+                alt="100% Wyze satisfaction guarantee"
+                width={131}
+                height={131}
+                className="shrink-0 w-full h-full"
+              />
+            </div>
+            <div className=" min-[1500px]:hidden ">
+              <span className="block text-[18px] mb-6 font-gilroy font-semibold leading-[110%] tracking-[0.6px] align-middle text-gray-900">
+                30-day hassle-free returns
+              </span>
+              <span className="block text-[18px] font-gilroy font-normal leading-[110%] tracking-[0.6px] align-middle text-gray-900">
+                If you're not totally in love with the product, we will refund you 100%.
+              </span>
+            </div>
           </div>
 
+
           {/* Pricing & Financing */}
-          <div className="flex flex-col items-end gap-1  min-[1500px]:flex-row">
+          <div className="flex mt-4 justify-between items-center min-[1500px]:items-end w-full min-[1500px]:w-fit gap-1  min-[1500px]:flex-col">
             {/* Financing line */}
-            <span className="bg-primary text-white font-gilroy font-normal text-[12px] leading-none  flex items-center justify-center px-2 py-1 rounded-[3px]">
+            <span className="bg-primary text-white font-gilroy font-normal px-2 py-1 h-fit min-[600px]:h-6.75 min-[1500px]:h-fit text-[12px] leading-none   flex items-center justify-center rounded-[3px]">
               as low as $17.19/mo
             </span>
 
@@ -163,9 +174,7 @@ export default function ReviewPanel() {
         </div>
 
         {/* Savings callout */}
-        <div>
 
-        </div>
         <div className="flex flex-col items-center">
           {savings > 0 && (
             <div className="text-center mx-auto text-[14px] font-gilroy font-semibold text-[#0AA288] tracking-[-0.06px]">
