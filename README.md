@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wyze Bundle Builder
 
-## Getting Started
+A multi-step bundle configurator where users pick cameras, a plan, sensors, and extras — then see a live order summary on the side.
 
-First, run the development server:
+## How to run
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Opens on http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Next.js 16 (App Router) + React 19 + TypeScript
+- Tailwind CSS v4 for styling
+- No external state management — just React context
 
-## Learn More
- 
-To learn more about Next.js, take a look at the following resources:
+## Architecture & decisions
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Single context for state.** I went with one `BundleContext` that holds selections, quantities, active step, and variant choices. Considered splitting it into smaller contexts but honestly for this size of app it would've added complexity without much benefit.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+**Quantity change in review panel.** I desided to make it effect whatever selected variant of the products first with default of firts variants for easier management, when a variant get to 0 will move to next variant, i desided to do that becasue there are no spissifc variants showing in review panal to adjust directly.
 
-## Deploy on Vercel
+**UI decisions.** adding border to selected cards work only by changing colors to not effect the UI spacing, also reserves space for the scrollbar for same reason.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Tradeoffs
+
+- **No error boundaries.** If the API call fails, you just get an empty page with a console error. Should add proper error states.
+- **Tailwind utility classes everywhere.** Makes iteration fast but some of the class strings are getting long. Could extract more into components or use `@apply` but as it is now servs will.
+
