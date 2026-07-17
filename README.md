@@ -4,12 +4,18 @@ A multi-step bundle configurator where users pick cameras, a plan, sensors, and 
 
 ## How to run
 
+-For easer access i deployed it on Vercal on this link: https://task-two-liart.vercel.app/
+
+-using local machine:
+
 ```bash
 npm install
 npm run dev
 ```
 
-Opens on http://localhost:3000.
+Opens on http://localhost:3000 locally and .
+
+
 
 ## Stack
 
@@ -24,6 +30,7 @@ Opens on http://localhost:3000.
 **Quantity change in review panel.** I desided to make it effect whatever selected variant of the products first with default of firts variants for easier management, when a variant get to 0 will move to next variant, i desided to do that becasue there are no spissifc variants showing in review panal to adjust directly.
 
 **UI decisions.** adding border to selected cards work only by changing colors to not effect the UI spacing, also reserves space for the scrollbar for same reason.
+also for sections an steps that are not showed in Figma i compleated them form imagination as i see fit the UI and functionality of the app
 
 
 
