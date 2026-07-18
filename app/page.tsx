@@ -7,14 +7,14 @@ import { BundleProvider } from "@/app/context/BundleContext";
 export default function Home() {
   return (
     <BundleProvider>
-      <main className=" px-6 py-8 max-[600px]:px-3 max-[600px]:py-4">
+      <main className="max-w-[1800px] mx-auto px-6 py-8 max-[600px]:px-3 max-[600px]:py-4">
         {/* Mobile-only heading */}
         <div className="hidden max-[600px]:block text-center mb-5">
           <h1 className="text-2xl font-extrabold text-gray-900">Let&apos;s get started!</h1>
         </div>
 
         {/* Two-column layout: builder + review */}
-        <div className="grid grid-cols-[1fr_399px] gap-6 items-start max-[1500px]:grid-cols-1 min-[2400px]:grid-cols-2">
+        <div className="grid grid-cols-[1fr_399px] gap-6 items-start max-[1500px]:grid-cols-1 ">
           <div>
             <AccordionBuilder />
           </div>
